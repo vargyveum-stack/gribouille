@@ -3,7 +3,7 @@
 Jeu de dessin au doigt sur mobile, à jouer à plusieurs en se passant le téléphone.
 
 - Une seule page HTML autonome : `gribouille.html` (version de référence).
-- Modes : Mot-valise, Dessin à l'aveugle, Lâche pas le trait, Recto verso, Tremblement de trait, Megamix.
+- Modes : Lâche pas le trait, Dessin à l'aveugle, Black & white, Recto verso, Tournez méninges, Tremblement de trait, Megamix.
 - Jeu chacun pour soi ou en équipes de deux, classement final.
 - Les mots ajoutés par les joueurs restent sur l'appareil.
 - Historique des versions : `journal-versions.md`.

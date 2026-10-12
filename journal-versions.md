@@ -3,6 +3,25 @@
 Numérotation : bêta 0.x jusqu'à la première version jouable, qui deviendra la 1.0 sur ta demande.
 La version courante s'affiche en bas du menu de l'application.
 
+## Bêta 0.50 (test) — 12 octobre 2026
+
+Menu et boutons
+- 100 anecdotes de Gribouille (55 avant). Une anecdote douteuse (Courbet et Baudelaire) a été retirée, remplacée par des faits sûrs, dont plusieurs liés aux modes (contour aveugle, miroir, trait continu).
+- Sur-titre : « Jeu de dessin au doigt (et à l'œil) ».
+- Boutons Son et Narrateur : ronds (48 px, environ 8 mm sur téléphone), en haut à droite du menu, l'un sous l'autre. Son = haut-parleur (barré quand coupé), Narrateur = mini Gribouille (barré et estompé quand coupé). Le titre est un peu plus petit pour laisser de la place.
+
+Modes
+- « Mot-valise » est retiré (ses listes de mots aussi ; les mots que les joueurs y avaient ajoutés ne servent plus).
+- Nouveau « Black & white » (20 s) : noir sur blanc, puis fond noir et trait blanc, en alternance toutes les 5 s, flash 0,5 s avant chaque changement. Le dessin revient en noir sur blanc à la fin.
+- Nouveau « Tournez méninges » (20 s) : toutes les 5 s, flash 0,5 s puis la zone de dessin pivote d'un quart de tour dans le sens horaire en 0,5 s, visible, même si elle déborde de l'écran. Doigt immobile : ça trace quand même. Remise à l'endroit à la fin.
+- Ordre du menu : Lâche pas le trait, Dessin à l'aveugle, Black & white, Recto verso, Tournez méninges, Tremblement de trait, Megamix.
+- Megamix : 6 modes par série (séries de 6 tours), textes et annonces de Gribouille mis à jour.
+
+Manuel « Comment jouer » (refait, ton espiègle)
+- 4 sections : Le principe, Solo ou en équipe ?, Les modes de jeu (un seul encadré, nom en gras souligné et en couleur, icône et durée), Les boutons du haut (avec leurs icônes).
+
+- Sauvegarde de la version précédente : `gribouille-bêta-0.30.html`.
+
 ## Bêta 0.30 (test) — 12 octobre 2026
 
 - Petite bulle de Gribouille : elle apparaît alternativement à droite, puis à gauche de sa tête, et ainsi de suite (la pointe suit le côté).

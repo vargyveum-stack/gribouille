@@ -42,7 +42,7 @@
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{height:100%}
+html,body{height:100%; overflow:hidden}
 body{
   margin:0; padding-inline:16px; padding-block:12px;
   background:var(--bg); color:var(--fg);
@@ -205,7 +205,6 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 .menubtns{display:grid; grid-template-columns:1fr 1fr; gap:10px}
 .ver{margin:0; text-align:center; font-size:12px; color:var(--muted)}
 .introhero{flex:1; justify-content:center}
-.soundbtn{align-self:center; flex:none}
 .modebadge{padding:6px 12px; border-radius:99px; background:var(--pop); color:var(--pop-fg); font:800 14px/1 var(--display)}
 .how .field p,.how .field ol{margin:0; font-size:15px; text-wrap:pretty}
 .how .field ol{padding-left:20px; display:flex; flex-direction:column; gap:6px}
@@ -288,11 +287,6 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 .btn.ghost:not(:disabled):hover{ background:var(--info-hover); border-color:var(--info-hover-edge); box-shadow:none; }
 .btn.ghost:not(:disabled):active{ background:var(--info-press); border-color:var(--info-press); color:#fff; }
 
-/* Texte : bouton Son */
-#m-sound, #m-sound:not(:disabled):hover, #m-sound:not(:disabled):active{
-  background:transparent; border-color:transparent; box-shadow:none; color:var(--accent); text-decoration:underline; text-underline-offset:3px;
-}
-
 /* Rose : « Ajouter des mots » */
 #m-words{ background:var(--pink-soft); border-color:var(--pink-line); color:var(--pink); }
 #m-words:not(:disabled):hover{ background:var(--pink-line); box-shadow:none; }
@@ -317,6 +311,37 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 .mode:not(:disabled):hover{ border-color:var(--accent); }
 .tile{ background:var(--tile-bg); color:var(--tile-fg); border-radius:var(--tile-radius); }
 /* ===== FIN THÈME GRAPHIQUE ===== */
+/* ===== BOUTONS D'OPTION (son, narrateur) : ronds, en haut à droite du menu ===== */
+.menutop{display:flex; align-items:flex-start; gap:14px}
+.menutop .hero{flex:1; min-width:0}
+.menutop .logo{font-size:clamp(34px,10.5vw,60px)}
+.menutop .eyebrow{font-size:11px; letter-spacing:.08em}
+.optbtns{display:flex; flex-direction:column; gap:10px; flex:none; padding-top:8px}
+.optbtn,.optico{
+  width:48px; height:48px; padding:0; flex:none; display:grid; place-items:center; border-radius:50%;
+  border:2px solid var(--ok); background:var(--surface); color:var(--ok-ink);
+}
+.optbtn{cursor:pointer; touch-action:manipulation; transition:transform .12s ease, background .15s ease, box-shadow .15s ease}
+.optbtn:hover{background:var(--ok-soft); box-shadow:0 8px 18px -10px var(--ok-glow)}
+.optbtn:active{background:var(--ok-press); border-color:var(--ok-edge); transform:scale(.94)}
+.optbtn[data-on="0"],.optico[data-on="0"]{border-color:var(--line); color:var(--muted); background:transparent}
+.optbtn:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.optbtn svg,.optico svg{display:block}
+
+/* ===== MANUEL « Comment jouer » ===== */
+.howmode{display:flex; flex-direction:column; gap:6px; padding-top:12px; border-top:2px dashed var(--line)}
+.fieldhead + .howmode{border-top:0; padding-top:0}
+.howmode h3{margin:0; display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px}
+.howmode .mtile{width:36px; height:36px; border-radius:12px; background:var(--tile-bg); color:var(--tile-fg); display:grid; place-items:center; flex:none}
+.howmode .mtile svg{width:22px; height:22px}
+.howmode .mname{font:800 19px/1.1 var(--display); color:var(--accent); text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:4px; text-decoration-color:var(--pop)}
+.howopt{display:flex; align-items:center; gap:14px}
+.howopt + .howopt{padding-top:12px; border-top:2px dashed var(--line)}
+.howopt .pair{display:flex; flex-direction:column; gap:8px; flex:none}
+.howopt strong{color:var(--accent)}
+.stage.spinmode{z-index:10}
+.stage.inv{background:#000}
+
 
 /* ===== ICÔNES DES BOUTONS : un bouton prend une icône avec data-icon="nom" (dessins ci-dessous, un par nom) ===== */
 .btn[data-icon]::before{content:''; flex:none; width:20px; height:20px; background:currentColor; -webkit-mask:var(--i) center/contain no-repeat; mask:var(--i) center/contain no-repeat}
@@ -333,7 +358,6 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 .btn[data-icon="refresh"]{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 11a8 8 0 0 0-14.5-4M4 4v4h4M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4'/%3E%3C/svg%3E")}
 .btn[data-icon="sliders"]{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h10M18 7h2M4 17h2M10 17h10'/%3E%3Ccircle cx='16' cy='7' r='2'/%3E%3Ccircle cx='8' cy='17' r='2'/%3E%3C/svg%3E")}
 .btn[data-icon="home"]{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 11l8-7 8 7M6 10v10h12V10M10 20v-6h4v6'/%3E%3C/svg%3E")}
-#m-sound[data-on="0"]{--i:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9v6h4l5 4V5L8 9H4zM17 9l5 6M22 9l-5 6'/%3E%3C/svg%3E")}
 
 /* ===== GRIBOUILLE, le narrateur (TEST) — pour le retirer : GRIBOUILLE_TEST = false dans le script ===== */
 .gslot{display:flex; justify-content:center; width:100%}
@@ -387,9 +411,6 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 #splashGhost.out{opacity:0}
 .briefbtns{display:flex; gap:10px; align-items:center; justify-content:space-between}
 .briefbtns .primary{flex:1}
-#m-gribouille, #m-gribouille:not(:disabled):hover, #m-gribouille:not(:disabled):active{
-  background:transparent; border-color:transparent; box-shadow:none; color:var(--accent); text-decoration:underline; text-underline-offset:3px;
-}
 </style>
 
 
@@ -403,11 +424,17 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 <div id="app">
 
   <section id="menu" class="screen">
-    <div class="hero">
-      <p class="eyebrow">Jeu de dessin au doigt</p>
-      <h1 class="logo">Gribouille</h1>
-      <svg class="squiggle" viewBox="0 0 220 14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" aria-hidden="true"><path d="M3 8c14-9 22 8 36 0s22 8 36 0 22 8 36 0 22 8 36 0 22 8 36 0"/></svg>
-      <p class="lead" id="menuLead" hidden>Choisis un mode, puis passez-vous le téléphone. Un seul dessinateur à la fois.</p>
+    <div class="menutop">
+      <div class="hero">
+        <p class="eyebrow">Jeu de dessin au doigt (et à l'œil)</p>
+        <h1 class="logo">Gribouille</h1>
+        <svg class="squiggle" viewBox="0 0 220 14" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" aria-hidden="true"><path d="M3 8c14-9 22 8 36 0s22 8 36 0 22 8 36 0 22 8 36 0 22 8 36 0"/></svg>
+        <p class="lead" id="menuLead" hidden>Choisis un mode, puis passez-vous le téléphone. Un seul dessinateur à la fois.</p>
+      </div>
+      <div class="optbtns">
+        <button class="optbtn" id="m-sound" type="button"></button>
+        <button class="optbtn" id="m-gribouille" type="button"></button>
+      </div>
     </div>
     <div class="gslot top" id="gMenu" hidden></div>
     <div class="modes" id="modes"></div>
@@ -416,8 +443,6 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
       <button class="btn" id="m-words" data-icon="plus" type="button">Ajouter des mots</button>
     </div>
     <p class="ver" id="ver"></p>
-    <button class="btn ghost soundbtn" id="m-sound" data-icon="sound" type="button"></button>
-    <button class="btn ghost soundbtn" id="m-gribouille" data-icon="eye" type="button"></button>
   </section>
 
   <section id="choose" class="screen" hidden>
@@ -651,45 +676,12 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   var elFlash = $('#flash'), elPrepMode = $('#prepMode');
 
   var INK = '#14163a';
-  var VERSION = 'bêta 0.30 (test)';   // voir journal-versions.md
+  var VERSION = 'bêta 0.50 (test)';   // voir journal-versions.md
 
   /* ---------- Listes de mots ---------- */
   function L(s){ return s.split(',').map(function(x){ return x.trim(); }).filter(Boolean); }
 
   var BASE = {
-    /* Mot-valise : 6 familles de 200 mots. Les deux mots d'une paire viennent toujours de familles différentes. */
-    valise: {
-      animaux: L(`chien, chat, girafe, escargot, poisson, éléphant, pingouin, lapin, araignée, crocodile,
-        hibou, tortue, singe, requin, poule, vache, cochon, grenouille, dauphin, koala,
-        perroquet, flamant rose, hérisson, kangourou, pieuvre, canard, loup, ours, mouton, cheval,
-        chauve-souris, morse, paresseux, hippopotame, rhinocéros, zèbre, chameau, écureuil, dinosaure, coq,
-        papillon, coccinelle, serpent, homard, baleine, autruche, panda, lama, méduse, mouette`),
-      objets: L(`parapluie, lunettes, fauteuil, horloge, lampe, sac à dos, arrosoir, chaussure, couronne, clé,
-        brosse à dents, grille-pain, aspirateur, tabouret, valise, téléphone, ciseaux, marteau, bougie, chaussette,
-        bouilloire, miroir, échelle, cintre, théière, réveil, guitare, piano, tente, balai,
-        seau, cerf-volant, ventilateur, cadenas, casque, radio, bocal, éponge, couette, oreiller,
-        canne à pêche, sablier, boussole, jumelles, tambour, trompette, bouée, pelle, radiateur, ballon`),
-      nourriture: L(`pizza, gâteau, hamburger, glace, croissant, baguette, fromage, banane, ananas, pastèque,
-        citrouille, carotte, champignon, œuf au plat, saucisse, frites, spaghetti, sandwich, crêpe, donut,
-        popcorn, brocoli, tomate, fraise, cerise, citron, maïs, noix de coco, sushi, taco,
-        pomme, poire, raisin, oignon, aubergine, piment, chocolat, bonbon, sucette, barbe à papa,
-        soupe, cookie, tarte, yaourt, camembert, gaufre, kiwi, avocat, artichaut, pain d'épices`),
-      personnages: L(`pompier, cuisinier, astronaute, pirate, magicien, clown, fantôme, robot, sorcière, roi,
-        chevalier, ninja, cow-boy, détective, facteur, plongeur, dentiste, boulanger, jardinier, policier,
-        docteur, vampire, sirène, extraterrestre, bonhomme de neige, momie, squelette, père Noël, super-héros, ballerine,
-        bûcheron, pêcheur, musicien, peintre, apiculteur, coiffeur, pilote, alpiniste, mécanicien, géant,
-        lutin, dragon, licorne, yéti, zombie, viking, mamie, bébé, footballeur, gardien de phare`),
-      machines: L(`avion, bateau, vélo, fusée, train, camion, moto, tracteur, montgolfière, voiture,
-        bus, hélicoptère, sous-marin, trottinette, tramway, ambulance, grue, bulldozer, ascenseur, escalator,
-        télésiège, skateboard, planche à voile, canoë, paquebot, ovni, locomotive, scooter, deltaplane, parachute,
-        traîneau, calèche, tondeuse, machine à laver, distributeur, photocopieuse, frigo, micro-ondes, imprimante, ordinateur,
-        télévision, console de jeux, drone, manège, grande roue, bétonnière, voilier, tapis roulant, robot aspirateur, camion de pompier`),
-      lieux: L(`maison, château, pont, volcan, phare, igloo, pyramide, tour Eiffel, île, cabane,
-        moulin, cascade, montagne, désert, forêt, plage, grotte, cirque, piscine, stade,
-        église, gare, aéroport, boulangerie, supermarché, bibliothèque, école, hôpital, ferme, jardin,
-        serre, cactus, palmier, arbre, fleur, tournesol, nuage, arc-en-ciel, éclair, tornade,
-        soleil, lune, étoile, planète, comète, iceberg, tipi, labyrinthe, toboggan, balançoire`)
-    },
     /* Dessin à l'aveugle : 1200 mots simples à reconnaître d'un seul trait. */
     blind: L(`cœur, étoile, spirale, flèche, croix, éclair, goutte, flamme, nuage, lune,
       soleil, arc-en-ciel, ruban, nœud, losange, triangle, cercle, vague, zigzag, point d'interrogation,
@@ -727,32 +719,6 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   };
   /* Mots supplémentaires : portent chaque liste à 600 mots (les mots ajoutés par les joueurs, eux, sont gardés à part sur l'appareil) */
   var MORE = {
-    valise: {
-      animaux: L(`lion, tigre, renard, lézard, caméléon, crabe, étoile de mer, hippocampe, raie, anguille, pélican, toucan, paon, cygne, oie, dinde, pigeon, corbeau,
-        aigle, vautour, cigogne, colibri, perruche, canari, moineau, hirondelle, manchot, phoque, otarie, loutre, castor, taupe, souris, rat, hamster,
-        chèvre, âne, poney, taureau, bison, antilope, gazelle, cerf, renne, sanglier, blaireau, raton laveur, tapir, fourmilier, tatou`),
-      objets: L(`chapeau, casquette, bonnet, écharpe, gant, botte, tongs, ceinture, cravate, nœud papillon, montre, bague, collier, bracelet, boucle d'oreille,
-        sac à main, portefeuille, mouchoir, peigne, brosse à cheveux, sèche-cheveux, rasoir, savon, serviette, baignoire, douche, robinet, évier, cuillère,
-        fourchette, couteau, assiette, verre, tasse, bol, casserole, poêle, cocotte, passoire, rouleau à pâtisserie, fouet, louche, planche à découper,
-        ouvre-boîte, tire-bouchon, bouteille, carafe, cafetière, mixeur, four`),
-      nourriture: L(`orange, mandarine, pamplemousse, pêche, abricot, prune, melon, framboise, myrtille, mûre, groseille, figue, datte, mangue, papaye, grenade, litchi,
-        noix, noisette, amande, cacahuète, châtaigne, olive, cornichon, concombre, courgette, poivron, radis, navet, betterave, poireau, céleri, chou,
-        chou-fleur, salade, épinard, haricot vert, petits pois, pomme de terre, patate douce, ail, gingembre, beurre, œuf, lait, miel, confiture, pain,
-        brioche, pain au chocolat`),
-      personnages: L(`reine, princesse, prince, fée, elfe, nain, troll, ogre, monstre, sorcier, druide, samouraï, gladiateur, pharaon, explorateur, archéologue,
-        scientifique, professeur, élève, maîtresse d'école, infirmière, vétérinaire, pharmacien, boucher, poissonnier, fleuriste, libraire, serveur,
-        caissier, livreur, chauffeur de bus, conducteur de train, capitaine, marin, naufragé, agriculteur, berger, vigneron, pâtissier, barman, danseur,
-        chanteur, acrobate, jongleur, équilibriste, dompteur, mime, présentateur, journaliste, photographe`),
-      machines: L(`taxi, limousine, camionnette, voiture de course, voiture de police, quad, kart, monocycle, tandem, vélo d'appartement, rollers, patins à roulettes,
-        draisienne, poussette, chariot de courses, chariot élévateur, pelleteuse, rouleau compresseur, camion-benne, camion poubelle, déneigeuse, remorque,
-        caravane, camping-car, bateau pirate, radeau, kayak, pédalo, jet-ski, bateau à moteur, ferry, remorqueur, brise-glace, porte-avions, galion, gondole,
-        péniche, hydravion, avion de ligne, avion de chasse, planeur, zeppelin, dirigeable, navette spatiale, satellite, sonde spatiale, rover martien,
-        lave-vaisselle, sèche-linge, machine à coudre`),
-      lieux: L(`ville, village, gratte-ciel, immeuble, usine, cathédrale, temple, pagode, palais, château fort, muraille, pont-levis, fort, camping, port, quai,
-        jetée, dune, oasis, canyon, falaise, colline, vallée, prairie, champ de blé, verger, vignoble, potager, marais, étang, lac, rivière, fleuve, océan,
-        mer, récif de corail, banquise, glacier, geyser, tunnel, route, autoroute, carrefour, feu rouge, rond-point, parking, station-service, péage, hôtel,
-        restaurant`)
-    },
     blind: L(`carré, rectangle, ovale, hexagone, boucle, ressort, hélice, anneau, virgule, parenthèse, accolade, dièse, arobase, infini, coche,
       point d'exclamation, damier, rayure, pois, grille, huit, tourbillon, trèfle, pique, carreau, étincelle, bulle, larme, plume, pétale, zèbre,
       hippopotame, rhinocéros, crocodile, lézard, caméléon, koala, panda, loup, cerf, biche, écureuil, taupe, chauve-souris, aigle, pigeon, perroquet,
@@ -774,68 +740,10 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
       beurre, lait, miel, confiture, brioche, pain au chocolat, bretzel, muffin, macaron, flan, sorbet, cornet de glace, esquimau, chewing-gum, réglisse,
       guimauve, caramel, meringue, chantilly, pâtes, riz, ravioli, nouilles, hot-dog, kebab`)
   };
-  Object.keys(MORE.valise).forEach(function(c){ BASE.valise[c] = BASE.valise[c].concat(MORE.valise[c]); });
   BASE.blind = BASE.blind.concat(MORE.blind);
   /* FIN mots supplémentaires */
-  /* Extension à 1200 mots : 200 mots par famille pour Mot-valise, 1200 pour les modes à un seul mot */
+  /* Extension à 1200 mots pour les modes à un seul mot */
   var MORE2 = {
-    valise: {
-      animaux: L(`ours polaire, panda roux, wallaby, ornithorynque, échidné, diable de Tasmanie, wombat, opossum, mouffette, porc-épic, écureuil volant, marmotte,
-        lièvre, belette, putois, martre, hermine, vison, loup arctique, coyote, chacal, dingo, fennec, renard polaire, lamantin, baleine bleue, béluga,
-        requin-marteau, requin blanc, raie manta, poisson-épée, poisson-lune, poisson volant, poisson-ballon, poisson-chat, truite, saumon, thon, sardine,
-        anchois, morue, hareng, carpe, brochet, perche, silure, esturgeon, piranha, barracuda, murène, congre, sole, turbot, mérou, daurade, rouget,
-        maquereau, seiche, nautile, bernard-l'hermite, tortue de mer, tortue géante, caïman, crocodile du Nil, varan, dragon de Komodo, basilic, agame,
-        anaconda, boa, serpent à sonnette, mamba, couleuvre, orvet, rainette, triton, axolotl, ouistiti, orang-outan, babouin, mandrill, gibbon, macaque,
-        singe-araignée, tamarin, loris, aye-aye, paresseux à trois doigts, fourmilier géant, pangolin, okapi, zèbre de montagne, gnou, buffle, yack, mouflon,
-        bouquetin, chamois, isard, élan`),
-      objets: L(`imperméable, k-way, collant, caleçon, soutien-gorge, débardeur, chemise, cravate à pois, salopette, tablier de cuisine, bavoir, couche, tétine,
-        biberon, hochet, doudou, peluche, poupée, train électrique, voiture miniature, cubes en bois, légo, toupie, yoyo, bilboquet, bulles de savon,
-        pistolet à eau, seau et pelle, château de sable, trampoline, corde à linge, pince à linge, fer à repasser, planche à repasser, serpillière, brosse,
-        balayette, pelle à poussière, plumeau, gant de ménage, bouteille de lessive, étendoir, panier à linge, sac poubelle, passeport, carte au trésor,
-        longue-vue, sac de couchage, lampe frontale, gourde, couteau suisse, allumette, briquet, chandelier, lampe à huile, lampe de chevet,
-        lustre en cristal, rétroviseur, drap, matelas, lit superposé, berceau, coucou, calendrier, agenda, carnet, post-it, classeur, perforatrice, colle,
-        scotch, tampon, cachet de cire, plume d'oie, encrier, machine à calculer, boulier, rapporteur, équerre, globe lumineux, tableau blanc, feutre,
-        surligneur, marqueur, fusain, crayon de couleur, pastel, aquarelle, pot de confiture, boîte de conserve, thermos, bouilloire électrique, gaufrier,
-        crêpière, moule à gâteau, balance de cuisine, éplucheur, couteau à pain, ciseaux de cuisine, rouleau d'aluminium`),
-      nourriture: L(`citron vert, échalote, asperge, fenouil, radis noir, potiron, butternut, panais, rutabaga, topinambour, endive, mâche, roquette, persil, menthe,
-        ciboulette, thym, romarin, laurier, poivre, sel, sucre, farine, levure, vanille, cannelle, chocolat chaud, cacao, praline, pâte à tartiner,
-        beurre de cacahuète, fromage blanc, brie, roquefort, chèvre frais, comté, emmental, gruyère, mozzarella, parmesan, feta, raclette fromage, beignet,
-        pancake, tarte tatin, tarte au citron, tarte aux fraises, forêt-noire, paris-brest, opéra, tiramisu, panna cotta, profiterole, île flottante,
-        riz au lait, far breton, kouign-amann, canelé, financier, sablé, brownie, pain de campagne, biscotte, cracker, chips, pop-corn, berlingot, truffe,
-        marron glacé, calisson, nougat de Montélimar, dragée, pâte d'amande, galette des rois, bûche de Noël, panettone, tagliatelles, penne, gnocchis,
-        calzone, risotto, paella, couscous, tajine, maki, ramen, pad thaï, nem, rouleau de printemps, samoussa, falafel, houmous, taboulé, burger, nuggets,
-        croque-madame, panini, bagel, tacos, burrito`),
-      personnages: L(`indien, loup-garou, dragon cracheur, génie de la lampe, ange, diable, scaphandrier, serveuse, agriculteur en tracteur, chasseur, magicien de cirque,
-        avaleur de sabres, homme canon, trapéziste, funambule, roi de la jungle, tarzan, homme des cavernes, moine, nonne, curé, mousquetaire, bourreau,
-        bouffon, troubadour, ménestrel, fermier, bergère, laitière, meunier, aubergiste, marchand, banquier, comptable, juge, maire, président, ministre,
-        diplomate, ambassadeur, espionne, agent secret, justicier, méchant, grand-mère, tante, oncle, cousin, jumelle, voisin, concierge, gardien de musée,
-        guide touristique, touriste, randonneur, spéléologue, parachutiste, hôtesse de l'air, steward, contrôleur, matelot, amiral, mousse,
-        capitaine de navire, sauveteur, maître-nageur, entraîneur, rugbyman, handballeur, volleyeur, nageuse, gymnaste, patineur, escrimeur, archer,
-        lanceur de javelot, haltérophile, marathonien, chef d'orchestre, pianiste, guitariste, batteur, violoniste, violoncelliste, trompettiste, rockeur,
-        rappeur, chanteuse d'opéra, sculpteur, écrivain, poète, dessinateur, caricaturiste, mannequin, maquilleuse, réalisateur, cascadeur, vedette,
-        paparazzi, bibliothécaire sévère`),
-      machines: L(`autobus, vélo électrique, camion de pompiers, dépanneuse, camion-citerne, bathyscaphe, parapente, ULM, avion cargo, jet privé, Concorde,
-        soucoupe volante, remonte-pente, montagnes russes, auto-tamponneuse, carrousel à chevaux, machine à café, grille-pain électrique, réfrigérateur,
-        congélateur, cuisinière, hotte aspirante, robot ménager, aspirateur robot, climatiseur, chaudière, pompe à eau, générateur, éolienne géante,
-        panneau photovoltaïque, centrale nucléaire, chariot de golf, voiturette, voiture électrique, voiture à pédales, kart à pédales, tondeuse autoportée,
-        souffleur de feuilles, taille-haie, débroussailleuse, scie circulaire, ponceuse, perforateur, compresseur, soudeuse, tour de potier, métier à tisser,
-        rouet, presse à imprimer, fax, téléphone à cadran, téléphone portable, talkie, radar, sonar, boussole électronique, GPS, télécommande,
-        console de jeu, manette, ordinateur de bureau, clavier, souris d'ordinateur, écran plat, magnétoscope, lecteur DVD, radio-réveil, baladeur,
-        poste à galène, horloge pointeuse, caisse automatique, borne de recharge, pompe à essence, lavage auto, bateau-mouche, navette fluviale, bac,
-        canot de sauvetage, bouée tractée, scooter des mers, char à voile, traîneau à chiens, motoneige, dameuse, chasse-neige, cabriolet, fiacre, carrosse,
-        chariot à bœufs, diligence, rickshaw, pousse-pousse, tricycle, vélo à grande roue, hoverbike, voiture volante, véhicule lunaire, tank, char d'assaut,
-        jeep`),
-      lieux: L(`appartement, studio, villa de luxe, cabane dans les arbres, tente de cirque, roulotte, péniche habitée, château de contes, tour de guet, donjon,
-        forteresse, cité médiévale, abbaye, monastère, chapelle, mosquée, synagogue, cimetière, mausolée, sphinx, colisée, acropole, théâtre antique,
-        aqueduc, thermes romains, amphithéâtre, arc de triomphe, obélisque, monument, place du marché, place de village, fontaine publique, jardin public,
-        square, aire de jeux, bac à sable, skatepark, gymnase, crique, calanque, baie, presqu'île, cap, îlot, archipel, falaise de craie, gouffre, caverne,
-        source chaude, cascade géante, torrent, ruisseau, gué, chemin forestier, sentier de montagne, col, sommet enneigé, refuge de montagne,
-        station de ski, chalet d'alpage, pâturage, bocage, haie, champ de tournesols, champ de lavande, rizière, plantation de thé, oliveraie, collège,
-        université, librairie, pâtisserie, boutique de jouets, magasin de vêtements, bijouterie, coiffeur de quartier, laverie, piste d'atterrissage,
-        tour de contrôle, hangar, entrepôt, port de pêche, marina, chantier naval, cale sèche, plate-forme de forage, mine d'or, puits de pétrole,
-        raffinerie, centrale électrique, décharge, déchetterie, station d'épuration, parc national, réserve naturelle, safari, désert de sable,
-        désert de glace, pôle Nord, pôle Sud`)
-    },
     blind: L(`rond, ballon, feu de camp, sifflet, cadeau, flèche d'archer, baguette magique, lampe magique, trésor, coffre, ancre, gouvernail, bouée, bulldozer,
       camion de pompiers, ballon rouge, sorcier, reine, cow-boy, ange, citrouille d'Halloween, chapeau de sorcière, chauve-souris noire, balai de sorcière,
       chaudron, potion, livre de sorts, boule de cristal, tapis volant, bague magique, couronne de roi, trône, sceptre, drapeau pirate, tête de mort,
@@ -897,13 +805,14 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
       tulipe hollandaise, sabot hollandais, moulin hollandais, bretzel allemand, chope de bière, fromage suisse, coucou suisse, chocolat suisse,
       kimono japonais, éventail, lanterne japonaise, pagode japonaise`)
   };
-  Object.keys(MORE2.valise).forEach(function(c){ BASE.valise[c] = BASE.valise[c].concat(MORE2.valise[c]); });
   BASE.blind = BASE.blind.concat(MORE2.blind);
   /* FIN extension 1200 mots */
-  /* Les modes « Lâche pas le trait », « Recto verso » et « Tremblement de trait » piochent dans la même liste de mots simples. */
+  /* Tous les modes piochent dans la même liste de mots simples. */
   BASE.single = BASE.blind;
   BASE.flip = BASE.blind;
   BASE.shake = BASE.blind;
+  BASE.bw = BASE.blind;
+  BASE.spin = BASE.blind;
 
   /* Mots ajoutés par les joueurs, gardés sur cet appareil */
   var STORE_KEY = 'gribouille.words.v1';
@@ -995,36 +904,20 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   }
   function takeWord(b){ var w = drawFree(b); markUsed(w); return w; }
 
-  /* Les mots ajoutés par les joueurs rejoignent simplement les listes : même tirage que les autres. */
-  var vCats = Object.keys(BASE.valise);
-  function valiseAll(){
-    var o = [];
-    vCats.forEach(function(c){ BASE.valise[c].forEach(function(w){ o.push({ w: w, c: c }); }); });
-    custom.valise.forEach(function(w){ o.push({ w: w, c: 'perso:' + w }); });   // chaque mot ajouté forme sa propre « famille »
-    return uniqWords(o);
-  }
-  var vFirst = bag(valiseAll);
-  var vSecond = bag(valiseAll);
   var sBag = {};
-  ['blind', 'single', 'flip', 'shake'].forEach(function(id){
+  ['blind', 'single', 'flip', 'shake', 'bw', 'spin'].forEach(function(id){
     sBag[id] = bag(function(){ return uniqWords(BASE[id].concat(custom[id])); });
   });
   function resetBags(){
-    vFirst.reset(); vSecond.reset();
     Object.keys(sBag).forEach(function(id){ sBag[id].reset(); });
   }
 
-  function pickPair(){
-    var first = drawFree(vFirst);
-    markUsed(first.w);
-    var second = drawFree(vSecond, function(x){ return x.c !== first.c && normW(x.w) !== normW(first.w); });
-    markUsed(second.w);
-    return Math.random() < 0.5 ? [first.w, second.w] : [second.w, first.w];
-  }
   function pickBlind(){ return [takeWord(sBag.blind)]; }
   function pickSingle(){ return [takeWord(sBag.single)]; }
   function pickFlip(){ return [takeWord(sBag.flip)]; }
   function pickShake(){ return [takeWord(sBag.shake)]; }
+  function pickBW(){ return [takeWord(sBag.bw)]; }
+  function pickSpin(){ return [takeWord(sBag.spin)]; }
 
   function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
   function plural(n, one, many){ return n + ' ' + (n > 1 ? many : one); }
@@ -1034,7 +927,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   }
 
   /* ---------- Modes de jeu ---------- */
-  var ICON_VALISE = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="24" height="17" rx="4"/><path d="M12 10V7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><path d="M4 18h24"/></svg>';
+  var ICON_BW = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="16" r="11"/><path d="M16 5a11 11 0 0 0 0 22z" fill="currentColor"/></svg>';
+  var ICON_SPIN = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="11" y="13" width="10" height="14" rx="2"/><path d="M6 12a11 11 0 0 1 19-5"/><path d="M26 2v6h-6"/></svg>';
   var ICON_BLIND = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16s5-8 13-8 13 8 13 8-5 8-13 8S3 16 3 16z"/><circle cx="16" cy="16" r="3.5"/><path d="M5 27L27 5"/></svg>';
 
   var ICON_SINGLE = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 25c4-11 8 4 12-4s6-12 9-15"/><circle cx="6" cy="25" r="2" fill="currentColor"/></svg>';
@@ -1045,58 +939,69 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 
   /* Pour ajouter un mode : une entrée ici (et une liste dans BASE s'il utilise des mots).
      hidden : le trait est invisible pendant le dessin. tools : boutons Annuler et Effacer.
-     single : un seul trait, la partie de dessin s'arrête dès que le doigt se lève. flip : le dessin se retourne en miroir (haut/bas) toutes les 5 s. */
+     single : un seul trait, la partie de dessin s'arrête dès que le doigt se lève. flip : le dessin se retourne en miroir (haut/bas) toutes les 5 s.
+     bw : les couleurs s'inversent toutes les 5 s. spin : le dessin pivote d'un quart de tour toutes les 5 s. shake : la zone tremble.
+     L'ordre de cette liste est l'ordre d'affichage dans le menu. */
+  var PREP_HELP = 'Les autres ferment les yeux. Touche la carte pour voir ton mot.';
   var MODES = [
-    { id: 'valise', label: 'Mot-valise', short: 'Valise', tag: '30 s',
-      desc: 'Deux mots à fusionner en un seul dessin. Les autres retrouvent les deux.',
-      how: "Tu reçois deux mots sans rapport. Fusionne-les en un seul dessin : les autres doivent retrouver les deux mots. Tu as 30 secondes, avec les boutons Annuler et Effacer, et tu peux revoir tes mots en maintenant le bouton.",
-      icon: ICON_VALISE, duration: 30, hidden: false, tools: true, pick: pickPair,
-      prepHelp: 'Les autres ferment les yeux. Touche la carte pour voir tes deux mots.',
-      prepGo: 'Fusionne-les en un seul dessin.',
-      runHint: 'Fusionne les deux mots en un seul dessin',
-      revealLabel: 'Révéler les mots', peekLabel: 'Revoir les mots (maintenir)' },
-    { id: 'blind', label: "Dessin à l'aveugle", short: 'Aveugle', tag: '15 s',
-      desc: 'Ton trait est invisible pendant que tu dessines. Révélation à la fin du chrono.',
-      how: "Ton trait est invisible : l'écran est noir, avec seulement une traînée blanche qui s'efface en une demi-seconde. Tu as 15 secondes à partir du premier trait. À la fin, le dessin se révèle en animation et les autres devinent le mot.",
-      icon: ICON_BLIND, duration: 15, hidden: true, tools: false, pick: pickBlind,
-      prepHelp: 'Les autres ferment les yeux. Touche la carte pour voir ton mot.',
-      prepGo: 'Dessine-le sans voir ton trait.',
-      runHint: '',
-      revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'single', label: 'Lâche pas le trait', short: 'Un trait', tag: '20 s',
       desc: 'Un seul trait, sans jamais lever le doigt. Le chrono démarre quand tu touches l\'écran.',
-      how: "Dessine ton mot en un seul trait, sans jamais lever le doigt. Le chrono de 20 secondes démarre au premier contact. Dès que tu lèves le doigt, le dessin est terminé, même s'il reste du temps, et les autres devinent.",
+      how: "Un seul trait, sans jamais lever le doigt. Le chrono démarre au premier contact, et dès que ton doigt décolle, c'est fini, même s'il reste du temps. Hésiter, c'est perdre !",
       icon: ICON_SINGLE, duration: 20, hidden: false, tools: false, single: true, pick: pickSingle,
-      prepHelp: 'Les autres ferment les yeux. Touche la carte pour voir ton mot.',
+      prepHelp: PREP_HELP,
       prepGo: 'Dessine-le en un seul trait, sans lever le doigt.',
       runHint: 'Ne lève surtout pas le doigt',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
+    { id: 'blind', label: "Dessin à l'aveugle", short: 'Aveugle', tag: '15 s',
+      desc: 'Ton trait est invisible pendant que tu dessines. Révélation à la fin du chrono.',
+      how: "Ton trait est invisible : l'écran est noir, avec juste une traînée blanche qui s'efface en une demi-seconde. Tu as 15 secondes à partir du premier trait, puis le dessin se révèle en animation. Place à l'art… modeste !",
+      icon: ICON_BLIND, duration: 15, hidden: true, tools: false, pick: pickBlind,
+      prepHelp: PREP_HELP,
+      prepGo: 'Dessine-le sans voir ton trait.',
+      runHint: '',
+      revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
+    { id: 'bw', label: 'Black & white', short: 'B&W', tag: '20 s',
+      desc: 'Noir sur blanc, puis blanc sur noir : les couleurs s\'inversent toutes les 5 s. Un flash prévient avant.',
+      how: "Tu commences en noir sur blanc. Toutes les 5 secondes, après un flash d'une demi-seconde, tout s'inverse : fond noir, trait blanc. Puis retour à la normale, et ainsi de suite. À la fin, le dessin repasse en noir sur blanc pour que les autres devinent.",
+      icon: ICON_BW, duration: 20, hidden: false, tools: false, bw: true, pick: pickBW,
+      prepHelp: PREP_HELP,
+      prepGo: 'Dessine-le, même quand les couleurs s\'inversent.',
+      runHint: 'Les couleurs s\'inversent toutes les 5 s',
+      revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'flip', label: 'Recto verso', short: 'Recto verso', tag: '20 s',
       desc: 'Toutes les 5 s, le dessin se retourne en miroir. Un flash prévient une demi-seconde avant.',
-      how: "Tu as 20 secondes et autant de traits que tu veux. Toutes les 5 secondes, le dessin se retourne en miroir, haut en bas, après un flash d'une demi-seconde. Tu continues sur l'écran retourné, puis tout repasse à l'endroit 5 secondes plus tard. À la fin, le dessin est remis dans le bon sens pour que les autres devinent.",
+      how: "Toutes les 5 secondes, après un flash d'une demi-seconde, le dessin se retourne en miroir, haut en bas. Tu continues sur l'écran retourné, puis tout repasse à l'endroit 5 secondes plus tard. À la fin, le dessin est remis dans le bon sens pour les autres.",
       icon: ICON_FLIP, duration: 20, hidden: false, tools: false, flip: true, pick: pickFlip,
-      prepHelp: 'Les autres ferment les yeux. Touche la carte pour voir ton mot.',
+      prepHelp: PREP_HELP,
       prepGo: 'Dessine-le, même quand le dessin se retourne.',
       runHint: 'Le dessin se retourne toutes les 5 s',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
+    { id: 'spin', label: 'Tournez méninges', short: 'Méninges', tag: '20 s',
+      desc: 'Toutes les 5 s, le dessin pivote d\'un quart de tour dans le sens horaire. Un flash prévient avant.',
+      how: "Toutes les 5 secondes, après un flash d'une demi-seconde, le dessin pivote d'un quart de tour dans le sens des aiguilles d'une montre : tu vois la zone tourner, même si elle déborde de l'écran. À la fin, tout est remis à l'endroit. Accroche-toi à tes méninges !",
+      icon: ICON_SPIN, duration: 20, hidden: false, tools: false, spin: true, pick: pickSpin,
+      prepHelp: PREP_HELP,
+      prepGo: 'Dessine-le, même quand ça tourne.',
+      runHint: 'Le dessin pivote toutes les 5 s',
+      revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'shake', label: 'Tremblement de trait', short: 'Tremblement', tag: '15 s',
       desc: 'Toutes les 3 s, la zone de dessin tremble une demi-seconde. Un flash prévient avant.',
-      how: "Tu as 15 secondes et autant de traits que tu veux. Toutes les 3 secondes, après un flash d'une demi-seconde, la zone de dessin tremble pendant une demi-seconde. Même si ton doigt ne bouge pas, la zone bouge sous lui et ça trace là où il est posé.",
+      how: "Toutes les 3 secondes, après un flash d'une demi-seconde, la zone de dessin tremble pendant une demi-seconde. Même si ton doigt ne bouge pas, la zone bouge sous lui et ça trace là où il est posé. Prévois un trait solide !",
       icon: ICON_SHAKE, duration: 15, hidden: false, tools: false, shake: true, pick: pickShake,
-      prepHelp: 'Les autres ferment les yeux. Touche la carte pour voir ton mot.',
+      prepHelp: PREP_HELP,
       prepGo: 'Dessine-le, même quand ça tremble.',
       runHint: 'Ça tremble toutes les 3 s',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'mega', label: 'Megamix', short: 'Megamix', tag: 'Mix', mega: true,
-      desc: 'Un mode différent à chaque tour, tiré au hasard : les cinq modes passent avant qu\'un revienne.',
-      how: "Chaque tour se joue dans un mode différent, tiré au hasard. Sur 5 tours, tu passes une fois par chacun des cinq autres modes, dans un ordre aléatoire. À partir du 6e tour, une nouvelle série de 5 commence, dans un nouvel ordre. Le mode du tour est affiché avant chaque dessin.",
+      desc: 'Un mode différent à chaque tour, tiré au hasard : les six modes passent avant qu\'un revienne.',
+      how: "Chaque tour se joue dans un mode différent, tiré au hasard. Sur 6 tours, tu passes une fois par chacun des six autres modes, dans un ordre aléatoire. À partir du 7e tour, une nouvelle série de 6 commence, dans un nouvel ordre. Le mode du tour est annoncé avant chaque dessin.",
       icon: ICON_MEGA }
   ];
   var MODE = {};
   MODES.forEach(function(m){ MODE[m.id] = m; });
   var PLAYABLE = MODES.filter(function(m){ return !m.soon; });
 
-  /* Megamix : une série = les 5 modes dans un ordre aléatoire. Le premier mode d'une série n'est jamais le dernier de la précédente. */
+  /* Megamix : une série = les 6 modes dans un ordre aléatoire. Le premier mode d'une série n'est jamais le dernier de la précédente. */
   var MEGA_POOL = PLAYABLE.filter(function(m){ return !m.mega; }).map(function(m){ return m.id; });
   function megaSeq(n){
     var out = [];
@@ -1179,7 +1084,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 
   /* ---------- Canvas ---------- */
   function fit(){
-    var r = cv.getBoundingClientRect();
+    var r = { width: cv.clientWidth, height: cv.clientHeight };   // taille de mise en page : ne change pas quand la zone pivote
     var dpr = Math.min(window.devicePixelRatio || 1, 3);
     cv.width = Math.max(1, Math.round(r.width * dpr));
     cv.height = Math.max(1, Math.round(r.height * dpr));
@@ -1215,14 +1120,15 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var w = cv.width, h = cv.height;
     ctx.clearRect(0, 0, w, h);
     if (w < 2 || h < 2 || !ref) return;
-    var r = cv.getBoundingClientRect();
+    var r = { width: cv.clientWidth, height: cv.clientHeight };
     var k = r.width ? w / r.width : 1;
     var s = Math.min(r.width / ref.w, r.height / ref.h);          // même proportions que le tracé d'origine
     var ox = (r.width - ref.w * s) / 2 * k, oy = (r.height - ref.h * s) / 2 * k;
     var a = s * k;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.lineWidth = 5.5 * a;
-    ctx.strokeStyle = INK; ctx.fillStyle = INK;
+    var ink = inverted ? '#ffffff' : INK;
+    ctx.strokeStyle = ink; ctx.fillStyle = ink;
     var budget = shown;
     for (var i = 0; i < strokes.length; i++) {
       if (budget <= 0) break;
@@ -1254,7 +1160,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     tctx.clearRect(0, 0, w, h);
     while (segs.length && t - segs[0].t >= TRAIL_MS) segs.shift();
     if (!segs.length) { trailRaf = 0; return; }
-    var r = trail.getBoundingClientRect();
+    var r = { width: trail.clientWidth };
     var k = r.width ? w / r.width : 1;
     tctx.lineCap = 'round'; tctx.lineJoin = 'round';
     tctx.lineWidth = 6 * k;
@@ -1273,10 +1179,13 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 
   /* ---------- Dessin au doigt ---------- */
   function pt(e){
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!ref) ref = { w: w, h: h };
     var r = cv.getBoundingClientRect();
-    if (!ref) ref = { w: r.width, h: r.height };
-    var y = e.clientY - r.top;
-    return [e.clientX - r.left, flipped ? ref.h - y : y];   // le tracé est stocké à l'endroit, même quand l'affichage est retourné
+    var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    var a = -spinDeg * Math.PI / 180, c = Math.cos(a), sn = Math.sin(a);   // on défait la rotation de la zone (Tournez méninges)
+    var x = dx * c - dy * sn + w / 2, y = dx * sn + dy * c + h / 2;
+    return [x, flipped ? ref.h - y : y];   // le tracé est stocké à l'endroit, même quand l'affichage est retourné
   }
   cv.addEventListener('pointerdown', function(e){
     if (state !== 'draw' || !e.isPrimary) return;
@@ -1327,12 +1236,45 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   }
   /* Recto verso : l'affichage du dessin est retourné (miroir haut/bas) toutes les FLIP_EVERY secondes, avec un flash FLASH_S avant */
   var flipped = false, flipIdx = 0, FLIP_EVERY = 5, FLASH_S = 0.5;
+  var inverted = false, invIdx = 0;              // Black & white : fond noir et trait blanc
+  var spinDeg = 0, SPIN_S = 0.5;                 // Tournez méninges : angle de la zone (degrés), durée du pivotement (s)
+  var elStage = $('#stage');
+  function setInv(on){
+    if (inverted === on) return;
+    inverted = on;
+    elStage.classList.toggle('inv', on);
+    requestRender();
+  }
+  function setSpin(deg){
+    spinDeg = deg;
+    elStage.style.transform = deg ? 'rotate(' + deg.toFixed(2) + 'deg)' : '';
+  }
+  function resetFx(){                            // remet tous les effets à zéro (flash compris)
+    setFlip(false); setInv(false); setSpin(0); setFlash(false);
+  }
   function setFlip(f){
     flipped = f;
     cv.style.transform = f ? 'scaleY(-1)' : '';
   }
   function setFlash(on){
     if (elFlash.classList.contains('on') !== on) elFlash.classList.toggle('on', on);
+  }
+  function updateInvert(t){
+    var k = Math.floor(t / FLIP_EVERY);
+    if (k !== invIdx) { invIdx = k; setInv(k % 2 === 1); }
+    var toNext = FLIP_EVERY - (t % FLIP_EVERY);
+    setFlash(toNext <= FLASH_S && (k + 1) * FLIP_EVERY < duration);
+  }
+  function easeIO(u){ return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+  function updateSpin(t){
+    var k = Math.floor(t / FLIP_EVERY), ph = t % FLIP_EVERY, turning = k >= 1 && ph < SPIN_S;
+    setSpin(turning ? (k - 1) * 90 + 90 * easeIO(ph / SPIN_S) : k * 90);
+    if (turning && drawing && lastPt) {          // doigt immobile : la zone tourne sous lui et ça trace quand même
+      var p = pt(lastPt);
+      if (!cur) { cur = [p]; strokes.push(cur); } else cur.push(p);
+      requestRender();
+    }
+    setFlash(ph >= FLIP_EVERY - FLASH_S && (k + 1) * FLIP_EVERY < duration);
   }
   function updateFlip(t){
     var k = Math.floor(t / FLIP_EVERY);
@@ -1499,7 +1441,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function startTimer(){
     started = true;
     startT = performance.now();
-    flipIdx = 0;
+    flipIdx = 0; invIdx = 0;
     shk.t0 = -1; shk.cx = 0; shk.cy = 0;
     startTick(duration);
     elCoverHint.hidden = true;
@@ -1510,6 +1452,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var left = Math.max(0, duration - (performance.now() - startT) / 1000);
     setTimerUI(left);
     if (M.flip && left > 0) updateFlip(duration - left);
+    if (M.bw && left > 0) updateInvert(duration - left);
+    if (M.spin && left > 0) updateSpin(duration - left);
     if (M.shake && left > 0) updateShake(duration - left);
     if (left <= 0) { finish(false); return; }
     raf = requestAnimationFrame(tick);
@@ -1610,7 +1554,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     $('#setupName').textContent = M.label + (cfg[id].team ? ' · Équipes de deux' : ' · Chacun pour soi');
     var mn = $('#megaNote');
     mn.hidden = !M.mega;
-    mn.textContent = M.mega ? "Chaque tour change de mode, tiré au hasard. Les cinq modes passent avant que l'un revienne." : '';
+    mn.textContent = M.mega ? "Chaque tour change de mode, tiré au hasard. Les six modes passent avant que l'un revienne." : '';
     buildPlayers();
     updateSetup();
     show('setup');
@@ -1742,53 +1686,88 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     f.appendChild(head);
     return f;
   }
+  function el(tag, cls, txt){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
   function buildHow(){
     var box = $('#howBody');
     box.innerHTML = '';
-    var intro = card('Le principe');
+
+    /* 1. Le principe */
+    var c1 = card('Le principe');
+    c1.appendChild(el('p', null, "Un téléphone, un dessinateur, des yeux fermés : bienvenue chez Gribouille !"));
     var ol = document.createElement('ol');
     [
-      "Un seul téléphone, qu'on se passe. Un seul dessinateur à la fois : les autres ferment les yeux.",
-      "Le dessinateur touche la carte pour voir son mot, puis appuie sur « Je suis prêt ».",
-      "Le chrono démarre au premier trait, avec un tic-tac qui s'accélère jusqu'à la fin. Quand le temps est écoulé, un « tada » retentit. Les autres devinent à voix haute. Le bouton Son du menu coupe tous les sons.",
-      "On révèle le mot, avec un « waouh », et on coche ceux qui ont trouvé. Puis on passe le téléphone.",
-      "Un mot ne sort qu'une seule fois pendant une partie, tous modes confondus, et ne revient pas avant 30 minutes, même d'une partie à l'autre sur ce téléphone."
-    ].forEach(function(t){
-      var li = document.createElement('li');
-      li.textContent = t;
-      ol.appendChild(li);
-    });
-    intro.appendChild(ol);
-    box.appendChild(intro);
-    var score = card('Les points');
+      "On se passe un seul téléphone. Un seul dessinateur à la fois : les autres ferment les yeux (Gribouille surveille, et il a l'œil !).",
+      "Le dessinateur touche la carte pour découvrir son mot, puis appuie sur « Je suis prêt ».",
+      "Le chrono part au premier trait, avec un tic-tac qui s'affole jusqu'au « tada » final. Les autres devinent à voix haute.",
+      "On révèle le mot (waouh !), on coche ceux qui ont trouvé, et le téléphone passe au suivant.",
+      "Un mot ne sort qu'une fois par partie, et pas avant 30 minutes ensuite, même d'une partie à l'autre. Promis, pas de redite."
+    ].forEach(function(t){ ol.appendChild(el('li', null, t)); });
+    c1.appendChild(ol);
+    box.appendChild(c1);
+
+    /* 2. Solo ou en équipe ? */
+    var c2 = card('Solo ou en équipe ?');
+    c2.appendChild(el('p', null, "Au lancement de chaque partie, tu choisis ta façon de jouer :"));
     [
-      "Le dessinateur marque 1 point pour chaque joueur qui trouve son dessin.",
-      "Plus il y a de joueurs qui devinent, plus il gagne de points : il peut en marquer jusqu'à autant qu'il y a d'autres joueurs.",
-      "Les points s'additionnent tout au long de la partie, et le classement final affiche le total de chacun."
-    ].forEach(function(t){
-      var p = document.createElement('p');
-      p.textContent = t;
-      score.appendChild(p);
+      ['Chacun pour soi', '2 à 8 joueurs', [
+        "Chacun dessine à son tour, tous les autres devinent.",
+        "Le dessinateur marque 1 point par joueur qui trouve son dessin. Plus il est lisible, plus il rafle de points (au maximum, autant que d'autres joueurs). Ceux qui devinent ne marquent rien : ils ont déjà la gloire d'avoir raison.",
+        "Un tour, c'est chaque joueur qui dessine une fois. Les points s'additionnent et le classement final affiche le total de chacun."
+      ]],
+      ['Équipes de deux', '2 à 6 équipes', [
+        "Dans chaque équipe, un équipier dessine et l'autre devine. Les rôles alternent à chaque tour : on se comprend sans parler… ou pas.",
+        "Chaque mot trouvé par l'équipier rapporte 1 point à l'équipe, sinon rien. Au tableau, ce sont les équipes qui comptent.",
+        "Un tour, c'est chaque joueur de chaque équipe qui dessine une fois."
+      ]]
+    ].forEach(function(sec){
+      var d = el('div', 'howmode'), h = el('h3');
+      h.appendChild(el('span', 'mname', sec[0]));
+      h.appendChild(el('span', 'chip', sec[1]));
+      d.appendChild(h);
+      sec[2].forEach(function(t){ d.appendChild(el('p', null, t)); });
+      c2.appendChild(d);
     });
-    box.appendChild(score);
-    var tm = card('Jouer en équipe', 'Par deux');
-    [
-      "Quand tu lances une partie, quel que soit le mode, une fenêtre te demande : « Chacun pour soi » ou « Équipes de deux ». En équipes, donne ensuite un nom à chaque équipe.",
-      "Dans une équipe, un joueur dessine et son équipier devine. Les rôles alternent : un tour, c'est chaque joueur de chaque équipe qui dessine une fois.",
-      "Une fois le mot révélé, on appuie sur « Trouvé » ou « Pas trouvé ». Chaque mot trouvé rapporte 1 point à l'équipe."
-    ].forEach(function(t){
-      var p = document.createElement('p');
-      p.textContent = t;
-      tm.appendChild(p);
-    });
-    box.appendChild(tm);
+    box.appendChild(c2);
+
+    /* 3. Les modes de jeu, tous dans le même encadré */
+    var c3 = card('Les modes de jeu');
     MODES.forEach(function(m){
-      var f = card(m.label, m.tag);
-      var p = document.createElement('p');
-      p.textContent = m.how;
-      f.appendChild(p);
-      box.appendChild(f);
+      var d = el('div', 'howmode'), h = el('h3'), t = el('span', 'mtile');
+      t.innerHTML = m.icon;
+      h.appendChild(t);
+      h.appendChild(el('span', 'mname', m.label));
+      h.appendChild(el('span', 'chip', m.tag));
+      d.appendChild(h);
+      d.appendChild(el('p', null, m.how));
+      c3.appendChild(d);
     });
+    box.appendChild(c3);
+
+    /* 4. Les boutons d'option */
+    var c4 = card('Les boutons du haut');
+    c4.appendChild(el('p', null, "En haut à droite du menu, deux petits boutons ronds. Un toucher les active ou les coupe, et le jeu s'en souvient."));
+    [
+      [soundSVG, 'Son', "Le haut-parleur active ou coupe tous les sons : tic-tac, tada, waouh et la voix de Gribouille. Quand il est barré, c'est silence radio."],
+      [narrSVG, 'Narrateur', "Le mini Gribouille active ou coupe le narrateur. Activé, il vous accueille, présente la partie et commente chaque dessin avec son petit caractère, jamais pendant que tu dessines. Barré, il part faire la sieste : seules les consignes écrites restent."]
+    ].forEach(function(o){
+      var row = el('div', 'howopt'), pair = el('div', 'pair'), txt = el('p');
+      [true, false].forEach(function(on){
+        var ic = el('span', 'optico');
+        ic.dataset.on = on ? '1' : '0';
+        ic.innerHTML = o[0](on);
+        pair.appendChild(ic);
+      });
+      txt.appendChild(el('strong', null, o[1] + ' : '));
+      txt.appendChild(document.createTextNode(o[2]));
+      row.appendChild(pair); row.appendChild(txt);
+      c4.appendChild(row);
+    });
+    box.appendChild(c4);
   }
   function openHow(){
     state = 'howto';
@@ -1849,7 +1828,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     G.stop();   // Gribouille ne reste jamais à l'écran quand on dessine
     disarmBack();
     cancelAnimationFrame(raf);
-    setFlip(false); setFlash(false);
+    resetFx();
     stopTick();
     clearTrail();
     state = 'prep';
@@ -1858,6 +1837,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     if (team) { drawer = idx % np; member = Math.floor(idx / np); }   // équipes dans l'ordre, puis le second joueur de chaque équipe
     else { drawer = idx; member = 0; }
     M = seq ? MODE[seq[Math.floor(turn / perRound)]] : MODE[mode];
+    elStage.classList.toggle('spinmode', !!M.spin);
     if (seq && noIntro !== true && idx === 0) { showIntro(); return; }   // début de manche en Megamix
     words = M.pick();
     duration = M.duration + gExtra;
@@ -1926,7 +1906,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function finish(early){
     if (state !== 'draw') return;
     cancelAnimationFrame(raf);
-    setFlip(false); setFlash(false);
+    resetFx();
     stopTick();
     if (!early) sfx('tada');   // fin du chrono (pas quand le joueur termine lui-même)
     drawing = false; cur = null;
@@ -2083,7 +2063,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     G.stop();
     disarmBack();
     cancelAnimationFrame(raf);
-    setFlip(false); setFlash(false);
+    resetFx();
     stopTick();
     clearTrail();
     state = 'menu';
@@ -2094,7 +2074,35 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     gMenu(wasPlaying);
   }
 
-  function updateSoundBtn(){ $('#m-sound').textContent = 'Son : ' + (soundOn ? 'activé' : 'coupé'); $('#m-sound').dataset.on = soundOn ? '1' : '0'; }
+  /* Icônes des boutons d'option (même trait arrondi que la planche de boutons) */
+  var ICON_ATTR = 'fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"';
+  function soundSVG(on){
+    return '<svg viewBox="0 0 24 24" width="28" height="28" ' + ICON_ATTR + '><path d="M4 9v6h4l5 4V5L8 9H4z"/>' +
+      (on ? '<path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19.2 5.8a9 9 0 0 1 0 12.4"/>' : '<path d="M17 9l5 6M22 9l-5 6"/>') + '</svg>';
+  }
+  function narrSVG(on){            // mini Gribouille (barré quand le narrateur est coupé)
+    return '<svg viewBox="30 10 350 420" width="29" height="35" aria-hidden="true" focusable="false">' +
+      '<g' + (on ? '' : ' opacity=".45"') + ' stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M168 140 L130 62" stroke="#14163a" stroke-width="14" fill="none"/>' +
+      '<path d="M200 136 L206 70" stroke="#14163a" stroke-width="14" fill="none"/><circle cx="208" cy="50" r="26" fill="#FFD21F" stroke="#14163a" stroke-width="8"/>' +
+      '<path d="M240 140 Q282 96 316 64" stroke="#14163a" stroke-width="14" fill="none"/><path d="M328 28 V68 M311 38 L345 58 M345 38 L311 58" stroke="#14163a" stroke-width="12" fill="none"/>' +
+      '<circle cx="58" cy="322" r="25" fill="#2B55E6"/><ellipse cx="346" cy="334" rx="26" ry="31" fill="#14163a" transform="rotate(-10 346 334)"/>' +
+      '<path d="M200 128 C290 126 342 195 336 265 C330 335 262 410 204 414 C140 410 70 335 64 265 C58 195 112 130 200 128 Z" fill="#F7F2E4"/>' +
+      '<path d="M226 129 C214 128 207 128 200 128 C112 130 58 195 64 265 C70 335 140 410 204 414 L197 414 C206 340 219 230 226 129 Z" fill="#F0452B"/>' +
+      '<path d="M200 128 C290 126 342 195 336 265 C330 335 262 410 204 414 C140 410 70 335 64 265 C58 195 112 130 200 128 Z" fill="none" stroke="#14163a" stroke-width="10"/>' +
+      '<circle cx="128" cy="238" r="50" fill="#FFFDF4" stroke="#14163a" stroke-width="10"/><circle cx="130" cy="240" r="20" fill="#14163a"/>' +
+      '<ellipse cx="282" cy="248" rx="40" ry="26" fill="#FFFDF4" stroke="#14163a" stroke-width="9"/><circle cx="288" cy="250" r="13" fill="#14163a"/>' +
+      '<path d="M179 360 Q214 385 249 360" stroke="#14163a" stroke-width="12" fill="none"/></g>' +
+      (on ? '' : '<path d="M52 40 L358 420" style="stroke:var(--surface)" stroke-width="42" stroke-linecap="round" fill="none"/><path d="M52 40 L358 420" stroke="currentColor" stroke-width="22" stroke-linecap="round" fill="none"/>') + '</svg>';
+  }
+  function updateSoundBtn(){
+    var b = $('#m-sound');
+    b.innerHTML = soundSVG(soundOn);
+    b.dataset.on = soundOn ? '1' : '0';
+    b.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+    b.setAttribute('aria-label', 'Son : ' + (soundOn ? 'activé' : 'coupé'));
+    b.title = 'Son : ' + (soundOn ? 'activé' : 'coupé');
+  }
   $('#m-sound').addEventListener('click', function(){
     soundOn = !soundOn;
     try { window.localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); } catch (e) {}
@@ -2705,7 +2713,52 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     "Le savais-tu ? Pierre Soulages appelait « outrenoir » sa peinture presque entièrement noire.",
     "Le savais-tu ? La gomme au bout du crayon a été inventée en 1858 aux États-Unis.",
     "Le savais-tu ? Nicolas Conté a inventé la mine de crayon moderne en 1795.",
-    "Incroyable : Courbet avait effacé la maîtresse de Baudelaire d'un tableau, elle est réapparue avec le temps !"
+    "Le savais-tu ? Un seul crayon à papier peut tracer un trait d'environ 56 kilomètres de long.",
+    "Le savais-tu ? La Joconde est toute petite : à peine 77 centimètres sur 53.",
+    "C'est surprenant : le plus ancien dessin connu, trouvé en Afrique du Sud, a environ 73 000 ans.",
+    "Le savais-tu ? Munch a peint et dessiné plusieurs versions du Cri, entre 1893 et 1910.",
+    "Le savais-tu ? Seurat construisait ses tableaux avec des milliers de petits points de couleur.",
+    "Le savais-tu ? Van Gogh a peint La Nuit étoilée en 1889, depuis l'asile de Saint-Rémy-de-Provence.",
+    "Le savais-tu ? Les mangas se lisent de droite à gauche, en commençant par la fin de l'album.",
+    "Le savais-tu ? On appelle la bande dessinée le 9e art.",
+    "Le savais-tu ? Le festival de la bande dessinée d'Angoulême existe depuis 1974.",
+    "Le savais-tu ? Mickey Mouse a fait ses débuts à l'écran en 1928, dans Steamboat Willie.",
+    "Le savais-tu ? Un dessin animé classique, c'est 24 images par seconde.",
+    "Le savais-tu ? Le folioscope, ces petits livres qu'on feuillette pour animer un dessin, date de 1868.",
+    "C'est surprenant : le bleu de Prusse a été découvert par accident, vers 1704.",
+    "Le savais-tu ? Le Vantablack, le noir le plus noir, absorbe environ 99,9 % de la lumière.",
+    "Le savais-tu ? Léonard de Vinci était gaucher.",
+    "Le savais-tu ? Renoir a continué de peindre malgré une arthrite sévère, le pinceau calé entre ses doigts.",
+    "Le savais-tu ? Toulouse-Lautrec a signé dès 1891 des affiches pour le Moulin Rouge.",
+    "Le savais-tu ? Le Douanier Rousseau a appris à peindre tout seul, en travaillant à l'octroi de Paris.",
+    "Le savais-tu ? Le Petit Nicolas est né en 1955, sous le crayon de Sempé et la plume de Goscinny.",
+    "Le savais-tu ? Moebius a imaginé des décors et des costumes pour Alien, Tron et Le Cinquième Élément.",
+    "Le savais-tu ? Les Simpson sont nés en 1987, en courts dessins animés dans une émission américaine.",
+    "Le savais-tu ? Calvin et Hobbes, de Bill Watterson, ont vécu dix ans, de 1985 à 1995.",
+    "Le savais-tu ? Obélix est tombé dans la marmite de potion magique quand il était petit.",
+    "Le savais-tu ? Hergé considérait Tintin au Tibet comme son aventure préférée.",
+    "Le savais-tu ? Dessiner sans regarder sa feuille est un exercice classique des écoles d'art : le contour aveugle.",
+    "Le savais-tu ? Regarder son dessin dans un miroir aide à repérer les erreurs de proportions.",
+    "Le savais-tu ? Picasso a réalisé des dessins d'animaux d'un seul trait continu, sans lever le crayon.",
+    "Le savais-tu ? Vers trois ans, les enfants dessinent des bonshommes têtards : une tête et deux jambes.",
+    "Le savais-tu ? Le mot graffiti vient de l'italien graffiare, « griffer ».",
+    "Le savais-tu ? À Pompéi, on a retrouvé des graffitis vieux de près de 2 000 ans.",
+    "Le savais-tu ? En peinture, les trois couleurs primaires sont le bleu, le rouge et le jaune.",
+    "Le savais-tu ? Newton a retenu sept couleurs pour l'arc-en-ciel, comme les sept notes de la gamme.",
+    "Le savais-tu ? Le stylo à bille a été breveté en 1938 par le Hongrois László Bíró.",
+    "Le savais-tu ? Le feutre moderne est né au Japon en 1962.",
+    "Le savais-tu ? La grotte de Lascaux compte près de 2 000 figures peintes ou gravées.",
+    "Le savais-tu ? Les peintures d'Altamira, en Espagne, ont été remarquées en 1879 par une fillette de 8 ans.",
+    "Le savais-tu ? Basquiat a débuté comme graffeur dans les rues de New York, sous le nom de SAMO.",
+    "Le savais-tu ? En 1962, Andy Warhol a peint 32 toiles de boîtes de soupe Campbell.",
+    "Le savais-tu ? Roy Lichtenstein agrandissait des cases de bande dessinée pour en faire des tableaux.",
+    "Le savais-tu ? Dans Les Ménines, Vélasquez s'est peint lui-même au travail.",
+    "Le savais-tu ? Sur un crayon, H veut dire dur (hard) et B veut dire gras (black).",
+    "Le savais-tu ? Avant la gomme, on effaçait le crayon avec de la mie de pain.",
+    "C'est surprenant : notre cerveau voit des visages partout, même dans les nuages. Ça s'appelle la paréidolie.",
+    "Le savais-tu ? La bulle d'une bande dessinée s'appelle un phylactère.",
+    "Le savais-tu ? Le mot cartoon vient de l'italien cartone, le grand carton des esquisses.",
+    "Le savais-tu ? Le fusain, du bois carbonisé, sert à dessiner depuis la préhistoire."
   ];
 
   /* Menu : Gribouille en haut, petite animation de temps en temps. La bulle garde son message 15 s, puis une anecdote toutes les 15 s */
@@ -2848,7 +2901,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var d = M.desc.charAt(0).toLowerCase() + M.desc.slice(1);
     gBriefMsgs = [
       { e: 'content', t: team ? "Salut les équipes ! Moi, c'est Gribouille, je serai votre narrateur." : "Salut ! Moi, c'est Gribouille, je serai votre narrateur." },
-      { e: 'malicieux', t: mega ? "Au programme : un mode différent à chaque tour, tiré au hasard. Les cinq passeront avant qu'un revienne." : MODE[mode].label + ' : ' + d },
+      { e: 'malicieux', t: mega ? "Au programme : un mode différent à chaque tour, tiré au hasard. Les six passeront avant qu'un revienne." : MODE[mode].label + ' : ' + d },
       { e: 'curieux', t: (team
         ? "Un joueur dessine, son équipier devine. Un mot trouvé, un point pour l'équipe !"
         : "Un joueur dessine, les autres devinent. Le dessinateur gagne 1 point par joueur qui trouve.") + ' ' + plural(gRounds, 'tour', 'tours') + ' au programme.' }
@@ -2882,9 +2935,10 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     if (!gOn()) return;
     G.mount($('#gIntro'), 'small');
     var Q = {
-      valise: { e: 'malicieux', t: "Deux mots à marier, bon courage !" },
       blind: { e: 'curieux', t: "Fermez les yeux… façon de parler !" },
       single: { e: 'surpris', t: "Un seul trait, sans lever le doigt !" },
+      bw: { e: 'malicieux', t: "Noir sur blanc, puis blanc sur noir : suivez le rythme !" },
+      spin: { e: 'surpris', t: "Ça va tourner ! Gardez la tête froide…" },
       flip: { e: 'rit', t: "Attention, ça va se retourner !" },
       shake: { e: 'surpris', t: "Tenez bien votre doigt, ça tremble !" }
     };
@@ -2996,8 +3050,11 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function updateGBtn(){
     var b = $('#m-gribouille');
     b.hidden = !GRIBOUILLE_TEST;
-    b.textContent = 'Narrateur : ' + (gPref ? 'activé' : 'coupé');
+    b.innerHTML = narrSVG(gPref);
     b.dataset.on = gPref ? '1' : '0';
+    b.setAttribute('aria-pressed', gPref ? 'true' : 'false');
+    b.setAttribute('aria-label', 'Narrateur : ' + (gPref ? 'activé' : 'coupé'));
+    b.title = 'Narrateur : ' + (gPref ? 'activé' : 'coupé');
   }
   $('#m-gribouille').addEventListener('click', function(){
     gPref = !gPref;
