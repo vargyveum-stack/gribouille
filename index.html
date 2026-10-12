@@ -340,7 +340,6 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
 .howopt .pair{display:flex; flex-direction:column; gap:8px; flex:none}
 .howopt strong{color:var(--accent)}
 .stage.spinmode{z-index:10}
-.stage.inv{background:#000}
 
 
 /* ===== ICÔNES DES BOUTONS : un bouton prend une icône avec data-icon="nom" (dessins ci-dessous, un par nom) ===== */
@@ -676,7 +675,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   var elFlash = $('#flash'), elPrepMode = $('#prepMode');
 
   var INK = '#14163a';
-  var VERSION = 'bêta 0.51 (test)';   // voir journal-versions.md
+  var VERSION = 'bêta 0.52 (test)';   // voir journal-versions.md
 
   /* ---------- Listes de mots ---------- */
   function L(s){ return s.split(',').map(function(x){ return x.trim(); }).filter(Boolean); }
@@ -811,7 +810,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   BASE.single = BASE.blind;
   BASE.flip = BASE.blind;
   BASE.shake = BASE.blind;
-  BASE.bw = BASE.blind;
+  BASE.verlan = BASE.blind;
+  BASE.late = BASE.blind;
   BASE.spin = BASE.blind;
 
   /* Mots ajoutés par les joueurs, gardés sur cet appareil */
@@ -824,6 +824,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
       var raw = window.localStorage.getItem(STORE_KEY);
       if (raw) {
         var o = JSON.parse(raw);
+        if (o && o.verlan === undefined && o.bw) o.verlan = o.bw;   // Black & white est devenu Verlan : on garde les mots ajoutés à l'ancien mode
         Object.keys(c).forEach(function(k){ c[k] = strArr(o && o[k]); });
       }
     } catch (e) {}
@@ -905,7 +906,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function takeWord(b){ var w = drawFree(b); markUsed(w); return w; }
 
   var sBag = {};
-  ['blind', 'single', 'flip', 'shake', 'bw', 'spin'].forEach(function(id){
+  ['blind', 'single', 'flip', 'shake', 'verlan', 'spin', 'late'].forEach(function(id){
     sBag[id] = bag(function(){ return uniqWords(BASE[id].concat(custom[id])); });
   });
   function resetBags(){
@@ -916,7 +917,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function pickSingle(){ return [takeWord(sBag.single)]; }
   function pickFlip(){ return [takeWord(sBag.flip)]; }
   function pickShake(){ return [takeWord(sBag.shake)]; }
-  function pickBW(){ return [takeWord(sBag.bw)]; }
+  function pickVerlan(){ return [takeWord(sBag.verlan)]; }
+  function pickLate(){ return [takeWord(sBag.late)]; }
   function pickSpin(){ return [takeWord(sBag.spin)]; }
 
   function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
@@ -927,7 +929,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   }
 
   /* ---------- Modes de jeu ---------- */
-  var ICON_BW = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="16" r="11"/><path d="M16 5a11 11 0 0 0 0 22z" fill="currentColor"/></svg>';
+  var ICON_VERLAN = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="16" r="2.5" fill="currentColor"/><path d="M20 12l8-8m0 0h-6m6 0v6"/><path d="M12 20l-8 8m0 0h6m-6 0v-6"/></svg>';
+  var ICON_LATE = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="16" cy="18" r="10"/><path d="M16 12v6l4 3M12 3h8"/></svg>';
   var ICON_SPIN = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="11" y="13" width="10" height="14" rx="2"/><path d="M6 12a11 11 0 0 1 19-5"/><path d="M26 2v6h-6"/></svg>';
   var ICON_BLIND = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16s5-8 13-8 13 8 13 8-5 8-13 8S3 16 3 16z"/><circle cx="16" cy="16" r="3.5"/><path d="M5 27L27 5"/></svg>';
 
@@ -940,7 +943,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   /* Pour ajouter un mode : une entrée ici (et une liste dans BASE s'il utilise des mots).
      hidden : le trait est invisible pendant le dessin. tools : boutons Annuler et Effacer.
      single : un seul trait, la partie de dessin s'arrête dès que le doigt se lève. flip : le dessin se retourne en miroir (haut/bas) toutes les 5 s.
-     bw : les couleurs s'inversent chaque seconde, sans flash. spin : le dessin pivote d'un quart de tour toutes les 5 s. shake : la zone tremble.
+     verlan : le trait part à l'opposé du doigt, à partir du point d'appui. late : le trait suit le doigt avec LATE_MS de retard.
+     spin : le dessin pivote d'un quart de tour toutes les 5 s. shake : la zone tremble.
      L'ordre de cette liste est l'ordre d'affichage dans le menu. */
   var PREP_HELP = 'Les autres ferment les yeux. Touche la carte pour voir ton mot.';
   var MODES = [
@@ -960,13 +964,13 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
       prepGo: 'Dessine-le sans voir ton trait.',
       runHint: '',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
-    { id: 'bw', label: 'Black & white', short: 'B&W', tag: '20 s',
-      desc: 'Noir sur blanc, puis blanc sur noir : les couleurs s\'inversent chaque seconde, sans prévenir.',
-      how: "Tu commences en noir sur blanc. Chaque seconde, sans le moindre avertissement, tout s'inverse : fond noir et trait blanc, puis retour à la normale, et ainsi de suite jusqu'à la fin. Ça clignote, accroche-toi ! À la fin, le dessin repasse en noir sur blanc pour que les autres devinent.",
-      icon: ICON_BW, duration: 20, hidden: false, tools: false, bw: true, pick: pickBW,
+    { id: 'verlan', label: 'Verlan', short: 'Verlan', tag: '20 s',
+      desc: 'Ton trait file à l\'opposé de ton doigt, à partir de l\'endroit où tu l\'as posé.',
+      how: "Pose le doigt : c'est ton point de départ. Mais le trait file à l'opposé de ton doigt : tu vas à droite, il va à gauche ; tu montes, il descend. Tu lèves le doigt puis tu le reposes ? Le nouveau point d'appui devient le nouveau centre, et le trait repart à l'envers de là. Comme en verlan, tout se dit à l'envers !",
+      icon: ICON_VERLAN, duration: 20, hidden: false, tools: false, verlan: true, pick: pickVerlan,
       prepHelp: PREP_HELP,
-      prepGo: 'Dessine-le, même quand les couleurs s\'inversent.',
-      runHint: 'Les couleurs s\'inversent chaque seconde',
+      prepGo: 'Dessine-le, même si ton trait part à l\'envers.',
+      runHint: 'Le trait va à l\'opposé de ton doigt',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'flip', label: 'Recto verso', short: 'Recto verso', tag: '20 s',
       desc: 'Toutes les 5 s, le dessin se retourne en miroir. Un flash prévient une demi-seconde avant.',
@@ -992,16 +996,24 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
       prepGo: 'Dessine-le, même quand ça tremble.',
       runHint: 'Ça tremble toutes les 3 s',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
+    { id: 'late', label: 'À la bourre', short: 'À la bourre', tag: '20 s',
+      desc: 'Ton trait a une seconde de retard : il refait ton parcours en différé.',
+      how: "Le trait suit ton doigt avec une seconde de retard : tu dessines, et ça n'apparaît qu'une seconde plus tard, comme s'il courait derrière toi. Il faut dessiner en avance ! À la fin du chrono, les derniers traits en retard apparaissent d'un coup, pour que le dessin soit complet.",
+      icon: ICON_LATE, duration: 20, hidden: false, tools: false, late: true, pick: pickLate,
+      prepHelp: PREP_HELP,
+      prepGo: 'Dessine-le, même si le trait arrive en retard.',
+      runHint: 'Le trait a 1 s de retard',
+      revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'mega', label: 'Megamix', short: 'Megamix', tag: 'Mix', mega: true,
-      desc: 'Un mode différent à chaque tour, tiré au hasard : les six modes passent avant qu\'un revienne.',
-      how: "Chaque tour se joue dans un mode différent, tiré au hasard. Sur 6 tours, tu passes une fois par chacun des six autres modes, dans un ordre aléatoire. À partir du 7e tour, une nouvelle série de 6 commence, dans un nouvel ordre. Le mode du tour est annoncé avant chaque dessin.",
+      desc: 'Un mode différent à chaque tour, tiré au hasard : les sept modes passent avant qu\'un revienne.',
+      how: "Chaque tour se joue dans un mode différent, tiré au hasard. Sur 7 tours, tu passes une fois par chacun des sept autres modes, dans un ordre aléatoire. À partir du 8e tour, une nouvelle série de 7 commence, dans un nouvel ordre. Le mode du tour est annoncé avant chaque dessin.",
       icon: ICON_MEGA }
   ];
   var MODE = {};
   MODES.forEach(function(m){ MODE[m.id] = m; });
   var PLAYABLE = MODES.filter(function(m){ return !m.soon; });
 
-  /* Megamix : une série = les 6 modes dans un ordre aléatoire. Le premier mode d'une série n'est jamais le dernier de la précédente. */
+  /* Megamix : une série = les 7 modes dans un ordre aléatoire. Le premier mode d'une série n'est jamais le dernier de la précédente. */
   var MEGA_POOL = PLAYABLE.filter(function(m){ return !m.mega; }).map(function(m){ return m.id; });
   function megaSeq(n){
     var out = [];
@@ -1081,6 +1093,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   var shown = Infinity;     // nombre de points affichés (révélation animée)
   var pending = false;
   var segs = [], trailRaf = 0, TRAIL_MS = 500;
+  var anchor = null;                      // Verlan : point d'appui du doigt (le trait part de là, à l'opposé du doigt)
+  var LATE_MS = 1000, lateQ = [], lateCur = null;   // À la bourre : retard du trait (ms), points du doigt en attente, trait en cours
 
   /* ---------- Canvas ---------- */
   function fit(){
@@ -1127,7 +1141,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var a = s * k;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.lineWidth = 5.5 * a;
-    var ink = inverted ? '#ffffff' : INK;
+    var ink = INK;
     ctx.strokeStyle = ink; ctx.fillStyle = ink;
     var budget = shown;
     for (var i = 0; i < strokes.length; i++) {
@@ -1195,7 +1209,10 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     if (!started) startTimer();
     drawing = true;
     lastPt = { clientX: e.clientX, clientY: e.clientY };
-    cur = [pt(e)];
+    var p0 = pt(e);
+    if (M.late) { lateQ.push({ t: performance.now(), k: 0, p: p0 }); return; }   // À la bourre : le point est tracé plus tard
+    if (M.verlan) anchor = p0;                                                     // Verlan : nouveau point d'appui
+    cur = [p0];
     strokes.push(cur);
     if (M.hidden) addSeg(cur[0], cur[0]); else requestRender();
   });
@@ -1204,6 +1221,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     e.preventDefault();
     lastPt = { clientX: e.clientX, clientY: e.clientY };
     var p = pt(e);
+    if (M.late) { lateQ.push({ t: performance.now(), k: 1, p: p }); return; }
+    if (M.verlan && anchor) p = [2 * anchor[0] - p[0], 2 * anchor[1] - p[1]];   // Verlan : symétrique du doigt par rapport au point d'appui
     if (!cur) {                       // trait coupé par un retournement : le doigt continue sur un nouveau trait
       cur = [p];
       strokes.push(cur);
@@ -1216,7 +1235,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   });
   function endStroke(){
     var was = drawing;
-    drawing = false; cur = null; lastPt = null;
+    if (was && M.late && state === 'draw') lateQ.push({ t: performance.now(), k: 2 });   // doigt levé (à retardement aussi)
+    drawing = false; cur = null; lastPt = null; anchor = null;
     if (was && M.single && state === 'draw') finish(true);   // un seul trait : doigt levé = fin du dessin
   }
   cv.addEventListener('pointerup', endStroke);
@@ -1236,21 +1256,14 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   }
   /* Recto verso : l'affichage du dessin est retourné (miroir haut/bas) toutes les FLIP_EVERY secondes, avec un flash FLASH_S avant */
   var flipped = false, flipIdx = 0, FLIP_EVERY = 5, FLASH_S = 0.5;
-  var inverted = false, invIdx = 0, INV_EVERY = 1;   // Black & white : fond noir et trait blanc, inversion toutes les INV_EVERY secondes, sans flash
   var spinDeg = 0, SPIN_S = 0.5;                 // Tournez méninges : angle de la zone (degrés), durée du pivotement (s)
   var elStage = $('#stage');
-  function setInv(on){
-    if (inverted === on) return;
-    inverted = on;
-    elStage.classList.toggle('inv', on);
-    requestRender();
-  }
   function setSpin(deg){
     spinDeg = deg;
     elStage.style.transform = deg ? 'rotate(' + deg.toFixed(2) + 'deg)' : '';
   }
   function resetFx(){                            // remet tous les effets à zéro (flash compris)
-    setFlip(false); setInv(false); setSpin(0); setFlash(false);
+    setFlip(false); setSpin(0); setFlash(false);
   }
   function setFlip(f){
     flipped = f;
@@ -1259,9 +1272,16 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function setFlash(on){
     if (elFlash.classList.contains('on') !== on) elFlash.classList.toggle('on', on);
   }
-  function updateInvert(t){
-    var k = Math.floor(t / INV_EVERY);
-    if (k !== invIdx) { invIdx = k; setInv(k % 2 === 1); }   // pas de flash : le changement arrive sans prévenir
+  /* À la bourre : les points du doigt sont rejoués avec LATE_MS de retard (lim = Infinity : on rattrape tout, en fin de chrono) */
+  function flushLate(lim){
+    var n = 0;
+    while (lateQ.length && lateQ[0].t <= lim) {
+      var q = lateQ.shift(); n++;
+      if (q.k === 2) lateCur = null;
+      else if (q.k === 0 || !lateCur) { lateCur = [q.p]; strokes.push(lateCur); }
+      else lateCur.push(q.p);
+    }
+    if (n) requestRender();
   }
   function easeIO(u){ return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
   function updateSpin(t){
@@ -1439,7 +1459,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function startTimer(){
     started = true;
     startT = performance.now();
-    flipIdx = 0; invIdx = 0;
+    flipIdx = 0;
     shk.t0 = -1; shk.cx = 0; shk.cy = 0;
     startTick(duration);
     elCoverHint.hidden = true;
@@ -1450,7 +1470,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var left = Math.max(0, duration - (performance.now() - startT) / 1000);
     setTimerUI(left);
     if (M.flip && left > 0) updateFlip(duration - left);
-    if (M.bw && left > 0) updateInvert(duration - left);
+    if (M.late) flushLate(performance.now() - LATE_MS);
     if (M.spin && left > 0) updateSpin(duration - left);
     if (M.shake && left > 0) updateShake(duration - left);
     if (left <= 0) { finish(false); return; }
@@ -1552,7 +1572,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     $('#setupName').textContent = M.label + (cfg[id].team ? ' · Équipes de deux' : ' · Chacun pour soi');
     var mn = $('#megaNote');
     mn.hidden = !M.mega;
-    mn.textContent = M.mega ? "Chaque tour change de mode, tiré au hasard. Les six modes passent avant que l'un revienne." : '';
+    mn.textContent = M.mega ? "Chaque tour change de mode, tiré au hasard. Les sept modes passent avant que l'un revienne." : '';
     buildPlayers();
     updateSetup();
     show('setup');
@@ -1831,6 +1851,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     clearTrail();
     state = 'prep';
     strokes = []; ref = null; cur = null; drawing = false; started = false; shown = Infinity; picks = {};
+    anchor = null; lateQ = []; lateCur = null;
     var np = players.length, idx = turn % perRound;
     if (team) { drawer = idx % np; member = Math.floor(idx / np); }   // équipes dans l'ordre, puis le second joueur de chaque équipe
     else { drawer = idx; member = 0; }
@@ -1904,6 +1925,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   function finish(early){
     if (state !== 'draw') return;
     cancelAnimationFrame(raf);
+    if (M.late) flushLate(Infinity);   // les derniers points en retard apparaissent d'un coup
     resetFx();
     stopTick();
     if (!early) sfx('tada');   // fin du chrono (pas quand le joueur termine lui-même)
@@ -2899,7 +2921,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var d = M.desc.charAt(0).toLowerCase() + M.desc.slice(1);
     gBriefMsgs = [
       { e: 'content', t: team ? "Salut les équipes ! Moi, c'est Gribouille, je serai votre narrateur." : "Salut ! Moi, c'est Gribouille, je serai votre narrateur." },
-      { e: 'malicieux', t: mega ? "Au programme : un mode différent à chaque tour, tiré au hasard. Les six passeront avant qu'un revienne." : MODE[mode].label + ' : ' + d },
+      { e: 'malicieux', t: mega ? "Au programme : un mode différent à chaque tour, tiré au hasard. Les sept passeront avant qu'un revienne." : MODE[mode].label + ' : ' + d },
       { e: 'curieux', t: (team
         ? "Un joueur dessine, son équipier devine. Un mot trouvé, un point pour l'équipe !"
         : "Un joueur dessine, les autres devinent. Le dessinateur gagne 1 point par joueur qui trouve.") + ' ' + plural(gRounds, 'tour', 'tours') + ' au programme.' }
@@ -2935,7 +2957,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var Q = {
       blind: { e: 'curieux', t: "Fermez les yeux… façon de parler !" },
       single: { e: 'surpris', t: "Un seul trait, sans lever le doigt !" },
-      bw: { e: 'malicieux', t: "Noir, blanc, noir, blanc… chaque seconde, sans prévenir !" },
+      verlan: { e: 'malicieux', t: "Tout à l'envers : ton trait file à l'opposé de ton doigt !" },
+      late: { e: 'curieux', t: "Ton trait arrive en retard… d'une seconde pile !" },
       spin: { e: 'surpris', t: "Ça va tourner ! Gardez la tête froide…" },
       flip: { e: 'rit', t: "Attention, ça va se retourner !" },
       shake: { e: 'surpris', t: "Tenez bien votre doigt, ça tremble !" }
