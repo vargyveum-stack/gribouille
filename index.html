@@ -676,7 +676,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   var elFlash = $('#flash'), elPrepMode = $('#prepMode');
 
   var INK = '#14163a';
-  var VERSION = 'bêta 0.50 (test)';   // voir journal-versions.md
+  var VERSION = 'bêta 0.51 (test)';   // voir journal-versions.md
 
   /* ---------- Listes de mots ---------- */
   function L(s){ return s.split(',').map(function(x){ return x.trim(); }).filter(Boolean); }
@@ -940,7 +940,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   /* Pour ajouter un mode : une entrée ici (et une liste dans BASE s'il utilise des mots).
      hidden : le trait est invisible pendant le dessin. tools : boutons Annuler et Effacer.
      single : un seul trait, la partie de dessin s'arrête dès que le doigt se lève. flip : le dessin se retourne en miroir (haut/bas) toutes les 5 s.
-     bw : les couleurs s'inversent toutes les 5 s. spin : le dessin pivote d'un quart de tour toutes les 5 s. shake : la zone tremble.
+     bw : les couleurs s'inversent chaque seconde, sans flash. spin : le dessin pivote d'un quart de tour toutes les 5 s. shake : la zone tremble.
      L'ordre de cette liste est l'ordre d'affichage dans le menu. */
   var PREP_HELP = 'Les autres ferment les yeux. Touche la carte pour voir ton mot.';
   var MODES = [
@@ -961,12 +961,12 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
       runHint: '',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'bw', label: 'Black & white', short: 'B&W', tag: '20 s',
-      desc: 'Noir sur blanc, puis blanc sur noir : les couleurs s\'inversent toutes les 5 s. Un flash prévient avant.',
-      how: "Tu commences en noir sur blanc. Toutes les 5 secondes, après un flash d'une demi-seconde, tout s'inverse : fond noir, trait blanc. Puis retour à la normale, et ainsi de suite. À la fin, le dessin repasse en noir sur blanc pour que les autres devinent.",
+      desc: 'Noir sur blanc, puis blanc sur noir : les couleurs s\'inversent chaque seconde, sans prévenir.',
+      how: "Tu commences en noir sur blanc. Chaque seconde, sans le moindre avertissement, tout s'inverse : fond noir et trait blanc, puis retour à la normale, et ainsi de suite jusqu'à la fin. Ça clignote, accroche-toi ! À la fin, le dessin repasse en noir sur blanc pour que les autres devinent.",
       icon: ICON_BW, duration: 20, hidden: false, tools: false, bw: true, pick: pickBW,
       prepHelp: PREP_HELP,
       prepGo: 'Dessine-le, même quand les couleurs s\'inversent.',
-      runHint: 'Les couleurs s\'inversent toutes les 5 s',
+      runHint: 'Les couleurs s\'inversent chaque seconde',
       revealLabel: 'Révéler le mot', peekLabel: 'Revoir le mot (maintenir)' },
     { id: 'flip', label: 'Recto verso', short: 'Recto verso', tag: '20 s',
       desc: 'Toutes les 5 s, le dessin se retourne en miroir. Un flash prévient une demi-seconde avant.',
@@ -1236,7 +1236,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
   }
   /* Recto verso : l'affichage du dessin est retourné (miroir haut/bas) toutes les FLIP_EVERY secondes, avec un flash FLASH_S avant */
   var flipped = false, flipIdx = 0, FLIP_EVERY = 5, FLASH_S = 0.5;
-  var inverted = false, invIdx = 0;              // Black & white : fond noir et trait blanc
+  var inverted = false, invIdx = 0, INV_EVERY = 1;   // Black & white : fond noir et trait blanc, inversion toutes les INV_EVERY secondes, sans flash
   var spinDeg = 0, SPIN_S = 0.5;                 // Tournez méninges : angle de la zone (degrés), durée du pivotement (s)
   var elStage = $('#stage');
   function setInv(on){
@@ -1260,10 +1260,8 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     if (elFlash.classList.contains('on') !== on) elFlash.classList.toggle('on', on);
   }
   function updateInvert(t){
-    var k = Math.floor(t / FLIP_EVERY);
-    if (k !== invIdx) { invIdx = k; setInv(k % 2 === 1); }
-    var toNext = FLIP_EVERY - (t % FLIP_EVERY);
-    setFlash(toNext <= FLASH_S && (k + 1) * FLIP_EVERY < duration);
+    var k = Math.floor(t / INV_EVERY);
+    if (k !== invIdx) { invIdx = k; setInv(k % 2 === 1); }   // pas de flash : le changement arrive sans prévenir
   }
   function easeIO(u){ return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
   function updateSpin(t){
@@ -2937,7 +2935,7 @@ fieldset.field legend{padding:0; font-weight:700; font-size:14px; margin-bottom:
     var Q = {
       blind: { e: 'curieux', t: "Fermez les yeux… façon de parler !" },
       single: { e: 'surpris', t: "Un seul trait, sans lever le doigt !" },
-      bw: { e: 'malicieux', t: "Noir sur blanc, puis blanc sur noir : suivez le rythme !" },
+      bw: { e: 'malicieux', t: "Noir, blanc, noir, blanc… chaque seconde, sans prévenir !" },
       spin: { e: 'surpris', t: "Ça va tourner ! Gardez la tête froide…" },
       flip: { e: 'rit', t: "Attention, ça va se retourner !" },
       shake: { e: 'surpris', t: "Tenez bien votre doigt, ça tremble !" }

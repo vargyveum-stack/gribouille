@@ -3,6 +3,12 @@
 Numérotation : bêta 0.x jusqu'à la première version jouable, qui deviendra la 1.0 sur ta demande.
 La version courante s'affiche en bas du menu de l'application.
 
+## Bêta 0.51 (test) — 12 octobre 2026
+
+- Black & white : l'inversion noir/blanc se fait maintenant chaque seconde (au lieu de 5 s), sans flash d'avertissement. Durée toujours 20 s ; le dessin repasse en noir sur blanc à la fin.
+- Description du menu, manuel « Comment jouer », indication pendant le dessin, phrase de Gribouille à l'annonce du mode et commentaires du code mis à jour.
+- Sauvegarde de la version précédente : `gribouille-bêta-0.50.html`.
+
 ## Bêta 0.50 (test) — 12 octobre 2026
 
 Menu et boutons
