@@ -3,6 +3,25 @@
 Numérotation : bêta 0.x jusqu'à la première version jouable, qui deviendra la 1.0 sur ta demande.
 La version courante s'affiche en bas du menu de l'application.
 
+## Bêta 0.52 (test) — 12 octobre 2026
+
+Nouveaux modes (idée : déstabiliser le dessinateur pour faire naître des situations drôles)
+- « Verlan » (20 s) remplace « Black & white ». Le trait part à l'opposé du doigt à partir du point d'appui : doigt vers la droite, trait vers la gauche ; doigt vers le haut, trait vers le bas (symétrie par rapport au point d'appui). Quand on lève puis qu'on repose le doigt, le nouveau point d'appui devient le nouveau centre et le trait repart à l'envers de là.
+- « À la bourre » (20 s), nouveau. Le trait refait le parcours du doigt avec 1 seconde de retard (réglable : constante `LATE_MS` dans le script). À la fin du chrono (ou sur « Terminé »), les derniers points en retard apparaissent d'un coup pour que le dessin soit complet.
+- Ordre du menu : Lâche pas le trait, Dessin à l'aveugle, Verlan, Recto verso, Tournez méninges, Tremblement de trait, À la bourre, Megamix.
+
+Black & white retiré
+- Tout le code d'inversion noir/blanc est supprimé. Les mots que les joueurs avaient ajoutés à Black & white sont repris par Verlan.
+
+Megamix
+- Passe à 7 modes : séries de 7 tours sans doublon (le premier mode d'une série n'est jamais le dernier de la précédente). Textes du menu, du manuel, du réglage et de Gribouille mis à jour (« sept »).
+
+Manuel « Comment jouer », narrateur, mots
+- Le manuel se construit à partir des modes : Verlan et À la bourre y figurent avec leur icône, leur durée et leur règle.
+- Gribouille a une phrase d'annonce pour chacun des deux nouveaux modes (annonce de manche en Megamix).
+- Les deux modes piochent dans la même liste de 1200 mots et dans les mots ajoutés par les joueurs, avec la même règle de non-répétition.
+- Sauvegarde de la version précédente : `gribouille-bêta-0.51.html`.
+
 ## Bêta 0.51 (test) — 12 octobre 2026
 
 - Black & white : l'inversion noir/blanc se fait maintenant chaque seconde (au lieu de 5 s), sans flash d'avertissement. Durée toujours 20 s ; le dessin repasse en noir sur blanc à la fin.
